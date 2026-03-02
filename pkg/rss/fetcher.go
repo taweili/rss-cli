@@ -1,6 +1,7 @@
 package rss
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -9,9 +10,15 @@ import (
 
 // FetchAndParseFeed fetches an RSS/Atom feed from the given URL and parses it
 func FetchAndParseFeed(url string) (*gofeed.Feed, error) {
-	// Create an http client with a reasonable timeout
+	// Create an http client with a reasonable timeout and redirect limit
 	client := &http.Client{
 		Timeout: 30 * time.Second,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			if len(via) >= 10 {
+				return fmt.Errorf("stopped after 10 redirects")
+			}
+			return nil
+		},
 	}
 
 	// Add User Agent header to avoid being blocked by servers
