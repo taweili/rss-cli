@@ -37,6 +37,30 @@ rss article mark 1 read
 rss import feed.opml
 ```
 
+## Example Usage
+
+Here's a complete workflow example:
+
+```bash
+# List current feeds (should be empty)
+go run ./cmd/rss-cli feed list
+
+# Add a feed (e.g., Hacker News)
+go run ./cmd/rss-cli feed add "https://news.ycombinator.com/rss"
+
+# List feeds after addition
+go run ./cmd/rss-cli feed list
+
+# Update the feed to fetch articles
+go run ./cmd/rss-cli feed update-all
+
+# List all articles
+go run ./cmd/rss-cli article list
+
+# Show just the latest 3 articles
+go run ./cmd/rss-cli article list -l 3
+```
+
 ## Commands
 
 ### Feed Management
