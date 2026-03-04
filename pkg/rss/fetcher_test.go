@@ -28,3 +28,38 @@ func TestFetchAndParseFeed_ExcessiveRedirects(t *testing.T) {
 		t.Fatalf("Expected at most 10 redirects, got %d", redirectCount)
 	}
 }
+
+func TestFetchAndParseFeed_SuccessfulRedirect(t *testing.T) {
+	// Create a server that redirects once then serves valid RSS
+	redirects := 0
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/old-feed" {
+			redirects++
+			http.Redirect(w, r, "/new-feed", http.StatusMovedPermanently)
+			return
+		}
+		// Serve minimal valid RSS
+		w.Header().Set("Content-Type", "application/rss+xml")
+		w.Write([]byte(`<?xml version="1.0"?>
+<rss version="2.0">
+<channel>
+<title>Test Feed</title>
+<item><title>Test Item</title></item>
+</channel>
+</rss>`))
+	}))
+	defer server.Close()
+
+	feed, err := FetchAndParseFeed(server.URL + "/old-feed")
+	if err != nil {
+		t.Fatalf("Expected no error, got: %v", err)
+	}
+
+	if redirects != 1 {
+		t.Fatalf("Expected exactly 1 redirect, got %d", redirects)
+	}
+
+	if feed.Title != "Test Feed" {
+		t.Fatalf("Expected feed title 'Test Feed', got '%s'", feed.Title)
+	}
+}
