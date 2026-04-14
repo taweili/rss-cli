@@ -46,6 +46,20 @@ func (p *Printer) outputJSON(data interface{}) error {
 func (p *Printer) outputText(data interface{}) error {
 	switch v := data.(type) {
 	case map[string]interface{}:
+		// Check if this is article view output
+		if _, ok := v["content"]; ok {
+			if title, ok := v["title"].(string); ok {
+				fmt.Fprintf(p.writer, "Title: %s\n", title)
+			}
+			if link, ok := v["link"].(string); ok {
+				fmt.Fprintf(p.writer, "Link: %s\n", link)
+			}
+			fmt.Fprintln(p.writer)
+			if content, ok := v["content"].(string); ok {
+				fmt.Fprintln(p.writer, content)
+			}
+			return nil
+		}
 		return p.outputMap(v)
 	case map[string]string:
 		return p.outputStringMap(v)

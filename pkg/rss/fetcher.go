@@ -2,6 +2,7 @@ package rss
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"time"
 
@@ -53,4 +54,44 @@ type HTTPError struct {
 
 func (e *HTTPError) Error() string {
 	return http.StatusText(e.StatusCode)
+}
+
+// FetchArticleContent fetches the raw HTML content from an article URL
+func FetchArticleContent(url string) (string, error) {
+	// Create an http client with a reasonable timeout and redirect limit
+	client := &http.Client{
+		Timeout: 30 * time.Second,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			if len(via) >= 10 {
+				return fmt.Errorf("stopped after 10 redirects")
+			}
+			return nil
+		},
+	}
+
+	// Add User Agent header to avoid being blocked by servers
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Set("User-Agent", "rss-cli/1.0")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", &HTTPError{StatusCode: resp.StatusCode}
+	}
+
+	// Read the response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("failed to read response body: %w", err)
+	}
+
+	return string(body), nil
 }

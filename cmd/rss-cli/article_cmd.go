@@ -7,7 +7,10 @@ import (
 
 	"github.com/spf13/cobra"
 	"rss-cli/pkg/database"
+	"rss-cli/pkg/rss"
 	"rss-cli/pkg/ui"
+
+	"github.com/kreuzberg-dev/html-to-markdown/packages/go/v2/htmltomarkdown"
 )
 
 var articleCmd = &cobra.Command{
@@ -116,9 +119,80 @@ var articleMarkCmd = &cobra.Command{
 	},
 }
 
+var articleViewCmd = &cobra.Command{
+	Use:   "view [id]",
+	Short: "View full article content",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		jsonMode, _ := cmd.Flags().GetBool("json")
+		printer := ui.NewPrinter(jsonMode)
+
+		dbPath, _ := cmd.Flags().GetString("db-path")
+		db, err := database.NewDB(dbPath)
+		if err != nil {
+			return printer.Error(fmt.Sprintf("Failed to connect to database: %v", err))
+		}
+		defer db.Close()
+
+		id, err := strconv.Atoi(args[0])
+		if err != nil {
+			return printer.Error("Invalid article ID")
+		}
+
+		// Get article from database
+		article, err := db.GetArticleByID(id)
+		if err != nil {
+			return printer.Error(fmt.Sprintf("Failed to retrieve article: %v", err))
+		}
+
+		if article.Link == "" {
+			return printer.Error("Article has no link URL")
+		}
+
+		// Fetch HTML content from the article URL
+		html, err := rss.FetchArticleContent(article.Link)
+		if err != nil {
+			// Handle HTTP errors with specific messages
+			if httpErr, ok := err.(*rss.HTTPError); ok {
+				switch httpErr.StatusCode {
+				case 404:
+					return printer.Error("Article not found (404)")
+				case 403:
+					return printer.Error("Access denied (403) — article may be paywalled")
+				case 410:
+					return printer.Error("Article gone (410)")
+				default:
+					return printer.Error(fmt.Sprintf("HTTP error (%d): %s", httpErr.StatusCode, httpErr.Error()))
+				}
+			}
+			return printer.Error(fmt.Sprintf("Failed to fetch article: %v", err))
+		}
+
+		// Convert HTML to Markdown
+		markdown, err := htmltomarkdown.Convert(html)
+		if err != nil {
+			return printer.Error(fmt.Sprintf("Failed to parse article content: %v", err))
+		}
+
+		if strings.TrimSpace(markdown) == "" {
+			return printer.Error("Article content is empty")
+		}
+
+		// Output the article with markdown content
+		return printer.Output(map[string]interface{}{
+			"id":       article.ID,
+			"title":    article.Title,
+			"link":     article.Link,
+			"content":  markdown,
+			"status":   "success",
+		})
+	},
+}
+
 func init() {
 	articleCmd.AddCommand(articleListCmd)
 	articleCmd.AddCommand(articleMarkCmd)
+	articleCmd.AddCommand(articleViewCmd)
 
 	// Flags for article list
 	articleListCmd.Flags().Bool("unread", false, "Show only unread articles")
