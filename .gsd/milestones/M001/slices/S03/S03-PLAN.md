@@ -49,7 +49,7 @@ Steps:
   - Files: ``cmd/rss-cli/article_cmd.go``
   - Verify: go build -o rss-cli ./cmd/rss-cli && ./rss-cli article open --help
 
-- [ ] **T03: Write comprehensive error handling tests** `est:1h`
+- [x] **T03: Write comprehensive error handling tests** `est:1h`
   Write comprehensive unit tests for error handling scenarios.
 
 Steps:
