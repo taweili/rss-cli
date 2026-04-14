@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "M001",
+  "sliceId": "S03",
+  "timestamp": 1776178428844,
+  "status": "fail",
+  "durationMs": 1,
+  "checks": [
+    {
+      "category": "file",
+      "target": "`rss-cli` binary",
+      "passed": false,
+      "message": "Task T04 references '`rss-cli` binary' which doesn't exist and isn't created by prior tasks",
+      "blocking": true
+    }
+  ]
+}
