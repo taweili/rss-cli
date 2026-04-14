@@ -62,7 +62,7 @@ Steps:
   - Files: ``pkg/rss/error_test.go``, ``cmd/rss-cli/article_open_test.go``
   - Verify: go test -v ./... -run 'TestHTTP|TestFetch|TestDetect|TestOpen'
 
-- [ ] **T04: Manual verification and integration testing** `est:45m`
+- [x] **T04: Manual verification and integration testing** `est:45m`
   Perform manual verification of all error scenarios and edge cases.
 
 Steps:

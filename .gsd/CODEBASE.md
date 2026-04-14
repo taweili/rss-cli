@@ -1,7 +1,7 @@
 # Codebase Map
 
-Generated: 2026-04-14T14:52:34Z | Files: 19 | Described: 0/19
-<!-- gsd:codebase-meta {"generatedAt":"2026-04-14T14:52:34Z","fingerprint":"8f16afd636968994e65dfdd0cf1c4813d2b5cbad","fileCount":19,"truncated":false} -->
+Generated: 2026-04-14T15:17:16Z | Files: 21 | Described: 0/21
+<!-- gsd:codebase-meta {"generatedAt":"2026-04-14T15:17:16Z","fingerprint":"0ca2672141687e8e229848d71f6f17bfb8fadf7a","fileCount":21,"truncated":false} -->
 
 ### (root)/
 - `.gitignore`
@@ -14,6 +14,7 @@ Generated: 2026-04-14T14:52:34Z | Files: 19 | Described: 0/19
 
 ### cmd/rss-cli/
 - `cmd/rss-cli/article_cmd.go`
+- `cmd/rss-cli/article_open_test.go`
 - `cmd/rss-cli/feed_cmd.go`
 - `cmd/rss-cli/import_cmd.go`
 - `cmd/rss-cli/main.go`
@@ -27,6 +28,7 @@ Generated: 2026-04-14T14:52:34Z | Files: 19 | Described: 0/19
 - `pkg/opml/importer.go`
 
 ### pkg/rss/
+- `pkg/rss/error_test.go`
 - `pkg/rss/fetcher_test.go`
 - `pkg/rss/fetcher.go`
 

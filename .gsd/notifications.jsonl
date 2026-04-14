@@ -45,3 +45,8 @@
 {"id":"1f548a97-fa28-4915-a469-d13776358c52","ts":"2026-04-14T15:10:23.086Z","severity":"info","message":"Entered worktree for M001 at /home/david/Works/rss-cli/.gsd/worktrees/M001","source":"notify","read":false}
 {"id":"46be12f7-8cc1-4fd4-b7c6-0ff2008cd578","ts":"2026-04-14T15:10:23.087Z","severity":"info","message":"Step-mode started. Will loop until milestone complete.","source":"notify","read":false}
 {"id":"7e7fa2e1-35c5-4eb3-899d-5932f55cc430","ts":"2026-04-14T15:10:23.088Z","severity":"info","message":"Dynamic routing: enabled — simple tasks may use cheaper models (ceiling: bailian/qwen3.5-plus)","source":"notify","read":false}
+{"id":"09d0ae60-2800-4445-98b6-638963082131","ts":"2026-04-14T15:17:04.823Z","severity":"info","message":"Committed: test: Write comprehensive error handling tests for HTTP errors, empty c…","source":"notify","read":false}
+{"id":"cd255be7-7de5-41be-a9a0-0f40624fed5d","ts":"2026-04-14T15:17:16.384Z","severity":"info","message":"Verification gate: 2/2 checks passed","source":"notify","read":false}
+{"id":"1192a18f-fde6-4f80-b8f5-0c0e67c2b5f2","ts":"2026-04-14T15:19:10.860Z","severity":"info","message":"Entered worktree for M001 at /home/david/Works/rss-cli/.gsd/worktrees/M001","source":"notify","read":false}
+{"id":"ce873531-b97d-44a2-8d9c-aa9b93c23c95","ts":"2026-04-14T15:19:10.862Z","severity":"info","message":"Step-mode started. Will loop until milestone complete.","source":"notify","read":false}
+{"id":"23dc7340-fdf7-42e3-bda7-90d065135eea","ts":"2026-04-14T15:19:10.863Z","severity":"info","message":"Dynamic routing: enabled — simple tasks may use cheaper models (ceiling: bailian/qwen3.5-plus)","source":"notify","read":false}
