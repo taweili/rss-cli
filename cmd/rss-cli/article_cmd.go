@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/toqueteos/webbrowser"
 	"rss-cli/pkg/database"
 	"rss-cli/pkg/ui"
 )
@@ -116,13 +117,56 @@ var articleMarkCmd = &cobra.Command{
 	},
 }
 
+var articleViewCmd = &cobra.Command{
+	Use:   "view [id]",
+	Short: "View an article by ID",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		jsonMode, _ := cmd.Flags().GetBool("json")
+		printer := ui.NewPrinter(jsonMode)
+
+		dbPath, _ := cmd.Flags().GetString("db-path")
+		db, err := database.NewDB(dbPath)
+		if err != nil {
+			return printer.Error(fmt.Sprintf("Failed to connect to database: %v", err))
+		}
+		defer db.Close()
+
+		id, err := strconv.Atoi(args[0])
+		if err != nil {
+			return printer.Error("Invalid article ID")
+		}
+
+		article, err := db.GetArticleByID(id)
+		if err != nil {
+			return printer.Error(fmt.Sprintf("Failed to retrieve article: %v", err))
+		}
+
+		open, _ := cmd.Flags().GetBool("open")
+		if open {
+			if err := webbrowser.Open(article.Link); err != nil {
+				return printer.Error(fmt.Sprintf("Failed to open article in browser: %v", err))
+			}
+		}
+
+		return printer.Output(map[string]interface{}{
+			"status": "success",
+			"article": article,
+		})
+	},
+}
+
 func init() {
 	articleCmd.AddCommand(articleListCmd)
 	articleCmd.AddCommand(articleMarkCmd)
+	articleCmd.AddCommand(articleViewCmd)
 
 	// Flags for article list
 	articleListCmd.Flags().Bool("unread", false, "Show only unread articles")
 	articleListCmd.Flags().Bool("read", false, "Show only read articles")
 	articleListCmd.Flags().StringP("feed", "f", "", "Filter by feed ID")
 	articleListCmd.Flags().StringP("limit", "l", "", "Limit number of results")
+
+	// Flags for article view
+	articleViewCmd.Flags().Bool("open", false, "Open article URL in default browser")
 }
