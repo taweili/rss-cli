@@ -30,3 +30,7 @@ vendor/
 coverage/
 .cache/
 tmp/
+.agents/
+.goose/
+skills/
+skills-lock.json
