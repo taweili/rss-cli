@@ -35,7 +35,7 @@ Steps:
   - Files: ``pkg/rss/fetcher.go``
   - Verify: go test -v ./pkg/rss -run TestHTTPError
 
-- [ ] **T02: Add article open command with browser detection** `est:1h`
+- [x] **T02: Add article open command with browser detection** `est:1h`
   Implement the article open command that opens article URLs in the default browser with proper error handling.
 
 Steps:

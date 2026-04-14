@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"net/url"
+	"os"
+	"os/exec"
 	"strconv"
 	"strings"
 
@@ -156,10 +159,138 @@ var articleViewCmd = &cobra.Command{
 	},
 }
 
+var articleOpenCmd = &cobra.Command{
+	Use:   "open [id]",
+	Short: "Open an article URL in the default browser",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		jsonMode, _ := cmd.Flags().GetBool("json")
+		printer := ui.NewPrinter(jsonMode)
+
+		dbPath, _ := cmd.Flags().GetString("db-path")
+		db, err := database.NewDB(dbPath)
+		if err != nil {
+			return printer.Error(fmt.Sprintf("Failed to connect to database: %v", err))
+		}
+		defer db.Close()
+
+		id, err := strconv.Atoi(args[0])
+		if err != nil {
+			return printer.Error("Invalid article ID")
+		}
+
+		article, err := db.GetArticleByID(id)
+		if err != nil {
+			return printer.Error(fmt.Sprintf("Failed to retrieve article: %v", err))
+		}
+
+		if article.Link == "" {
+			return printer.Error("Article has no URL")
+		}
+
+		// Validate URL format
+		if _, err := url.ParseRequestURI(article.Link); err != nil {
+			return printer.Error(fmt.Sprintf("Invalid article URL: %v", err))
+		}
+
+		// Check if custom browser is specified
+		browser, _ := cmd.Flags().GetString("browser")
+		if browser != "" {
+			// Use custom browser
+			if err := openBrowserWithCustom(article.Link, browser); err != nil {
+				return printer.Error(fmt.Sprintf("Failed to open article in %s: %v", browser, err))
+			}
+		} else {
+			// Use default browser detection
+			if err := openBrowser(article.Link); err != nil {
+				return printer.Error(fmt.Sprintf("Failed to open article: %v", err))
+			}
+		}
+
+		return printer.Output(map[string]interface{}{
+			"status": "success",
+			"msg":    fmt.Sprintf("Opened article %d in browser", id),
+			"url":    article.Link,
+		})
+	},
+}
+
+// detectBrowser returns the platform-specific browser command
+func detectBrowser() (string, error) {
+	switch {
+	case isLinux():
+		return "xdg-open", nil
+	case isMacOS():
+		return "open", nil
+	case isWindows():
+		return "cmd", nil
+	default:
+		return "", fmt.Errorf("unsupported platform")
+	}
+}
+
+// isLinux checks if the current OS is Linux
+func isLinux() bool {
+	return os.Getenv("XDG_CURRENT_DESKTOP") != "" || os.Getenv("DISPLAY") != ""
+}
+
+// isMacOS checks if the current OS is macOS
+func isMacOS() bool {
+	_, err := exec.LookPath("open")
+	return err == nil
+}
+
+// isWindows checks if the current OS is Windows
+func isWindows() bool {
+	return os.Getenv("OS") == "Windows_NT"
+}
+
+// openBrowser opens a URL in the default browser using platform-specific commands
+func openBrowser(url string) error {
+	// First try the webbrowser package (cross-platform)
+	if err := webbrowser.Open(url); err == nil {
+		return nil
+	}
+
+	// Fallback to platform-specific commands
+	browserCmd, err := detectBrowser()
+	if err != nil {
+		return fmt.Errorf("no browser found: %w", err)
+	}
+
+	var cmd *exec.Cmd
+	switch browserCmd {
+	case "xdg-open":
+		cmd = exec.Command("xdg-open", url)
+	case "open":
+		cmd = exec.Command("open", url)
+	case "cmd":
+		cmd = exec.Command("cmd", "/c", "start", url)
+	}
+
+	if cmd != nil {
+		// Detach the process so it doesn't block
+		cmd.Stdout = nil
+		cmd.Stderr = nil
+		return cmd.Start()
+	}
+
+	return fmt.Errorf("unable to launch browser")
+}
+
+// openBrowserWithCustom opens a URL using a custom browser command
+func openBrowserWithCustom(url string, browser string) error {
+	cmd := exec.Command(browser, url)
+	cmd.Stdout = nil
+	cmd.Stderr = nil
+	return cmd.Start()
+}
+
 func init() {
 	articleCmd.AddCommand(articleListCmd)
 	articleCmd.AddCommand(articleMarkCmd)
 	articleCmd.AddCommand(articleViewCmd)
+	articleCmd.AddCommand(articleOpenCmd)
 
 	// Flags for article list
 	articleListCmd.Flags().Bool("unread", false, "Show only unread articles")
@@ -169,4 +300,7 @@ func init() {
 
 	// Flags for article view
 	articleViewCmd.Flags().Bool("open", false, "Open article URL in default browser")
+
+	// Flags for article open
+	articleOpenCmd.Flags().String("browser", "", "Custom browser command to use (e.g., 'firefox', 'chrome')")
 }

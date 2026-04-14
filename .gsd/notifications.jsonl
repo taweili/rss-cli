@@ -27,3 +27,16 @@
 {"id":"89b39610-7772-4993-b8c8-4d9b0da280a3","ts":"2026-04-14T14:54:02.958Z","severity":"info","message":"Entered worktree for M001 at /home/david/Works/rss-cli/.gsd/worktrees/M001","source":"notify","read":false}
 {"id":"2a4c3bc6-43a5-4af1-b12b-77883f10d6d7","ts":"2026-04-14T14:54:02.958Z","severity":"info","message":"Step-mode resumed.","source":"notify","read":false}
 {"id":"834da62a-f1d3-4cef-8c97-1b2ce19055c7","ts":"2026-04-14T14:54:04.049Z","severity":"info","message":"Resume: applied 3 fix(es) to state.","source":"notify","read":false}
+{"id":"e15414f1-80be-4b0c-b9c6-edfe83c6c2b5","ts":"2026-04-14T14:58:30.246Z","severity":"info","message":"Committed: feat: Enhance RSS fetcher error types with categorization and user-frie…","source":"notify","read":false}
+{"id":"236863eb-fcb0-46b0-b5fa-0bab8383ba86","ts":"2026-04-14T14:58:30.270Z","severity":"warning","message":"[safety] file-change: .gitignore — Modified but not in task plan's expected output","source":"workflow-logger","read":false}
+{"id":"9b012794-ef0e-4381-b6e2-e11ca76c09b9","ts":"2026-04-14T14:58:30.271Z","severity":"warning","message":"[safety] file-change: pkg/rss/fetcher_test.go — Modified but not in task plan's expected output","source":"workflow-logger","read":false}
+{"id":"4bff4b42-83a7-4dd6-b697-ddba124347c3","ts":"2026-04-14T14:58:30.271Z","severity":"warning","message":"Safety: 2 unexpected file change(s) outside task plan","source":"notify","read":false}
+{"id":"2b13d292-b068-4e57-9a60-088f10a88a8d","ts":"2026-04-14T14:58:32.789Z","severity":"info","message":"Verification gate: 2/2 checks passed","source":"notify","read":false}
+{"id":"633d1d4e-64ba-4986-986c-8c6a0ff79d20","ts":"2026-04-14T14:58:52.646Z","severity":"info","message":"Resuming paused session for M001.","source":"notify","read":false}
+{"id":"a20db66d-fc96-4a78-8703-aa5b4cc8739d","ts":"2026-04-14T14:58:52.650Z","severity":"info","message":"Entered worktree for M001 at /home/david/Works/rss-cli/.gsd/worktrees/M001","source":"notify","read":false}
+{"id":"d11d2a30-4e2d-4415-baaa-ec8208f66e39","ts":"2026-04-14T14:58:52.650Z","severity":"info","message":"Step-mode resumed.","source":"notify","read":false}
+{"id":"f93e1144-f222-40b6-bbd6-9ddbf3c3a04c","ts":"2026-04-14T14:58:53.793Z","severity":"info","message":"Resume: applied 3 fix(es) to state.","source":"notify","read":false}
+{"id":"84031d6a-b9b6-4e2f-929b-e166c0220aeb","ts":"2026-04-14T15:00:57.683Z","severity":"warning","message":"[safety] destructive command: recursive delete","source":"workflow-logger","read":false}
+{"id":"bb9f26ca-f6b7-4858-9226-a72fc00f1248","ts":"2026-04-14T15:00:57.684Z","severity":"warning","message":"Destructive command detected: recursive delete","source":"notify","read":false}
+{"id":"244ee51b-bb86-4fd6-9ace-1b1af65a52d3","ts":"2026-04-14T15:01:39.126Z","severity":"warning","message":"[safety] destructive command: recursive delete","source":"workflow-logger","read":false}
+{"id":"722abd51-75f2-4656-b80d-93f5f57c5f63","ts":"2026-04-14T15:01:39.126Z","severity":"warning","message":"Destructive command detected: recursive delete","source":"notify","read":false}
