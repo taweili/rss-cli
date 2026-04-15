@@ -291,6 +291,7 @@ func init() {
 	articleCmd.AddCommand(articleMarkCmd)
 	articleCmd.AddCommand(articleViewCmd)
 	articleCmd.AddCommand(articleOpenCmd)
+	articleCmd.AddCommand(articleFetchCmd)
 
 	// Flags for article list
 	articleListCmd.Flags().Bool("unread", false, "Show only unread articles")

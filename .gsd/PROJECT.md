@@ -45,3 +45,4 @@ All requirements for M001 validated:
 ## Milestone Sequence
 
 - [x] M001: Article viewing for daily news reading — Fetch and display full article content in terminal with browser open option
+- [ ] M002: Article fetch with caching — New `article fetch [id]` command that fetches full article HTML, converts to markdown, caches in database

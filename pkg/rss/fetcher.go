@@ -23,6 +23,7 @@ const (
 	ErrCategoryServiceUnavailable = "ServiceUnavailable"
 	ErrCategoryServerError   = "ServerError"
 	ErrCategoryNetworkError  = "NetworkError"
+	ErrCategoryConversionFailure = "ConversionFailure"
 )
 
 // FetchAndParseFeed fetches an RSS/Atom feed from the given URL and parses it
@@ -192,6 +193,8 @@ func (e *HTTPError) UserMessage() string {
 		return "Server error. The feed server encountered an internal error."
 	case ErrCategoryNetworkError:
 		return "Network error. Unable to connect to the feed server."
+	case ErrCategoryConversionFailure:
+		return "Failed to convert HTML to markdown. The content may not be valid HTML."
 	default:
 		if e.StatusCode > 0 {
 			return fmt.Sprintf("HTTP error %d: %s", e.StatusCode, e.Message)

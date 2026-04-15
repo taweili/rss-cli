@@ -128,27 +128,8 @@ func (d *DB) SetArticleReadStatus(id int, read bool) error {
 	return err
 }
 
-// GetArticleByID retrieves a single article by its ID
-func (d *DB) GetArticleByID(id int) (*Article, error) {
-	query := `SELECT id, feed_id, guid, title, content, link, published_at, read
-	          FROM articles
-	          WHERE id = ?`
-
-	row := d.QueryRow(query, id)
-
-	var art Article
-	var publishedAtTemp string
-	err := row.Scan(
-		&art.ID, &art.FeedID, &art.GUID, &art.Title,
-		&art.Content, &art.Link, &publishedAtTemp, &art.Read,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	// Parse the timestamp back to time.Time then convert to string
-	t, _ := time.Parse(time.RFC3339, publishedAtTemp)
-	art.PublishedAt = t.Format(time.RFC3339)
-
-	return &art, nil
+func (d *DB) UpdateArticleContent(id int, content string) error {
+	query := `UPDATE articles SET content = ? WHERE id = ?`
+	_, err := d.Exec(query, content, id)
+	return err
 }

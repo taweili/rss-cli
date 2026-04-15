@@ -144,6 +144,37 @@ func TestHTTPErrorCategorization(t *testing.T) {
 - Use parameterized queries to prevent SQL injection
 - Use transactions for multi-table operations
 
+## Article Caching Pattern (M002/S02)
+
+**Context:** Caching fetched article content in the database after first fetch to avoid repeated network requests.
+
+**Pattern:**
+1. Add `UpdateArticleContent(id int, content string) error` method to database layer
+2. Use parameterized UPDATE query with ON CONFLICT or simple WHERE clause
+3. Fetch and convert article content first, then cache on success
+4. Keep content field nullable - articles without fetched content have NULL
+
+**Example:**
+```go
+// Database method
+func (db *DB) UpdateArticleContent(id int, content string) error {
+    query := `UPDATE articles SET content = ? WHERE id = ?`
+    _, err := db.Exec(query, content, id)
+    return err
+}
+
+// Command flow
+content, err := rss.FetchAndConvertArticle(url)
+if err != nil {
+    return err
+}
+if err := db.UpdateArticleContent(article.ID, content); err != nil {
+    return err
+}
+```
+
+**Why it matters:** Improves performance for re-reading articles, reduces network requests, allows offline viewing of previously fetched content. Trade-off: database storage increases with cached content.
+
 ## Verification Evidence
 
 All patterns above were verified through:
