@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -12,142 +11,14 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "rss-cli",
 	Short: "A command line RSS reader with SQLite backend",
-	Long: `A command line RSS reader with SQLite backend
+	Long: `A command line RSS reader with SQLite backend.
 
-A comprehensive RSS feed reader that stores feeds and articles in a SQLite database.
+Manages RSS feeds and articles in a local SQLite database.
 Supports feed management, article reading, and OPML import/export.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		// Show comprehensive help when running just "rss-cli" or "rss-cli -h"
-		showComprehensiveHelp(cmd)
-	},
-}
-
-func showComprehensiveHelp(cmd *cobra.Command) {
-	output := `
-================================================================================
-RSS CLI - A Command Line RSS Reader
-================================================================================
-
-A comprehensive RSS feed reader with SQLite backend for managing feeds and articles.
-
-================================================================================
-GLOBAL FLAGS
-================================================================================
-  -d, --db-path string   Database file path (default: ~/.rss-cli.db)
-  -j, --json             Output in JSON format (default: true)
-  -t, --text             Output in plain text format
-  -h, --help             Show help for any command
-
-================================================================================
-COMMANDS
-================================================================================
-
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ FEED COMMANDS (rss-cli feed)                                                    │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ rss-cli feed add [url]                                                          │
-│   Add a new RSS feed by URL                                                 │
-│                                                                             │
-│ rss-cli feed list                                                               │
-│   List all RSS feeds in the database                                        │
-│                                                                             │
-│ rss-cli feed remove [id]                                                        │
-│   Remove an RSS feed by its ID                                              │
-│                                                                             │
-│ rss-cli feed update [id]                                                        │
-│   Update a specific RSS feed and import new articles                        │
-│                                                                             │
-│ rss-cli feed update-all                                                         │
-│   Update all RSS feeds and import new articles                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ ARTICLE COMMANDS (rss-cli article)                                              │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ rss-cli article list [flags]                                                    │
-│   List RSS articles with optional filtering                                 │
-│   Flags:                                                                    │
-│     --unread        Show only unread articles                               │
-│     --read          Show only read articles                                 │
-│     -f, --feed id   Filter by feed ID                                       │
-│     -l, --limit n   Limit number of results                                 │
-│                                                                             │
-│ rss-cli article mark [id] [read|unread]                                         │
-│   Mark an article as read or unread                                         │
-│   Arguments:                                                                │
-│     id            Article ID                                                │
-│     read|unread   State to mark the article                                 │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ IMPORT/EXPORT COMMANDS (rss-cli import)                                         │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ rss-cli import [opml-file]                                                      │
-│   Import RSS feeds from an OPML file                                        │
-│   Arguments:                                                                │
-│     opml-file    Path to the OPML file to import                            │
-│                                                                             │
-│ rss-cli import export [opml-file]                                               │
-│   Export RSS feeds to an OPML file                                          │
-│   Arguments:                                                                │
-│     opml-file    Path to the OPML file to export to                         │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ UTILITY COMMANDS                                                            │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ rss-cli completion [bash|zsh|fish|powershell]                                   │
-│   Generate autocompletion script for the specified shell                    │
-│                                                                             │
-│ rss-cli help [command]                                                          │
-│   Show help about any command                                               │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-================================================================================
-EXAMPLES
-================================================================================
-
-  # Add a new RSS feed
-  rss-cli feed add https://example.com/feed.xml
-
-  # List all feeds
-  rss-cli feed list
-
-  # Update all feeds
-  rss-cli feed update-all
-
-  # List unread articles
-  rss-cli article list --unread
-
-  # Mark article as read
-  rss-cli article mark 123 read
-
-  # Import feeds from OPML
-  rss-cli import feeds.opml
-
-  # Export feeds to OPML
-  rss-cli import export feeds.opml
-
-================================================================================
-Use "rss-cli [command] --help" for more information about a specific command.
-================================================================================
-`
-	fmt.Println(strings.TrimSpace(output))
 }
 
 // Define flags at root command level
 func init() {
-	// Override the help function to show comprehensive help only for root command
-	rootCmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
-		if cmd == rootCmd {
-			showComprehensiveHelp(cmd)
-		} else {
-			// Use default help for subcommands
-			cmd.Root().SetHelpFunc(nil)
-			cmd.Help()
-		}
-	})
-
 	// Define the default DB path
 	homeDir, _ := os.UserHomeDir()
 	defaultDbPath := filepath.Join(homeDir, ".rss-cli.db")
