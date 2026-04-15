@@ -12,7 +12,7 @@ import (
 
 var articleFetchCmd = &cobra.Command{
 	Use:   "fetch [id]",
-	Short: "Fetch full article content from source URL and convert to markdown",
+	Short: "Fetch article content as markdown and cache it",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		jsonMode, _ := cmd.Flags().GetBool("json")

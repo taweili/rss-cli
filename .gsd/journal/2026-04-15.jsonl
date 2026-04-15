@@ -1,0 +1,4 @@
+{"ts":"2026-04-15T01:14:39.879Z","flowId":"5b9443e4-7965-450d-89b1-9fa8e1cb210c","seq":0,"eventType":"worktree-enter","data":{"milestoneId":"M002","wtPath":"/home/david/Works/rss-cli/.gsd/worktrees/M002","created":true}}
+{"ts":"2026-04-15T02:00:34.078Z","flowId":"38019c81-b5a8-4db7-acfe-bb8be1ba99f3","seq":0,"eventType":"worktree-enter","data":{"milestoneId":"M002","wtPath":"/home/david/Works/rss-cli/.gsd/worktrees/M002","created":false}}
+{"ts":"2026-04-15T02:34:33.780Z","flowId":"ddc9b918-b7dd-4494-964f-ce051612bded","seq":0,"eventType":"worktree-merge-start","data":{"milestoneId":"M002","mode":"worktree"}}
+{"ts":"2026-04-15T02:34:37.224Z","flowId":"cc9245b3-80f3-4ea3-add1-93f09ca00f25","seq":2,"eventType":"terminal","data":{"reason":"no-active-milestone"}}
